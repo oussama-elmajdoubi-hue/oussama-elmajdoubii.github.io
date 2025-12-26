@@ -349,11 +349,23 @@
             color: var(--text-sec);
             margin-bottom: 20px;
             transition: 0.5s;
+            animation: auto-float 3s ease-in-out infinite;
         }
 
         .card-spotlight:hover .skill-icon {
             color: var(--accent);
-            transform: rotate(360deg);
+        }
+
+        @keyframes auto-float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(5deg);
+            }
         }
 
         /* --- Timeline --- */
@@ -1013,6 +1025,8 @@
                 const y = this.start.y + (this.end.y - this.start.y) * this.progress;
                 ctx.beginPath();
                 ctx.arc(x, y, 2, 0, Math.PI * 2);
+                // --- CHANGE SIGNAL COLOR HERE ---
+                // You can change '--accent' to a hex code like '#ff0000' for red
                 ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent');
                 ctx.shadowBlur = 10;
                 ctx.shadowColor = ctx.fillStyle;
@@ -1077,7 +1091,8 @@
 
             // Draw grid lines
             ctx.lineWidth = 0.5;
-            ctx.strokeStyle = 'rgba(189, 52, 254, 0.1)'; // Low opacity accent
+            // --- CHANGE GRID LINE COLOR HERE --- (rgba)
+            ctx.strokeStyle = 'rgba(100, 255, 218, 0.1)';
             nodes.forEach(node => {
                 node.connections.forEach(conn => {
                     ctx.beginPath();
@@ -1087,7 +1102,8 @@
                 });
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(189, 52, 254, 0.2)';
+                // --- CHANGE GRID NODE COLOR HERE ---
+                ctx.fillStyle = 'rgba(100, 255, 218, 0.2)';
                 ctx.fill();
             });
 
@@ -1135,8 +1151,8 @@
                 draw() {
                     ctxT.beginPath();
                     ctxT.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
-                    // Using new purple accent: 189, 52, 254
-                    ctxT.fillStyle = `rgba(189, 52, 254, ${this.life})`;
+                    // Using accent: 100, 255, 218
+                    ctxT.fillStyle = `rgba(100, 255, 218, ${this.life})`;
                     ctxT.fill();
                 }
             }
@@ -1158,7 +1174,7 @@
                         let d = Math.hypot(p.x - p2.x, p.y - p2.y);
                         if (d < 100) {
                             ctxT.beginPath();
-                            ctxT.strokeStyle = `rgba(189, 52, 254, ${p.life * p2.life * 0.4})`;
+                            ctxT.strokeStyle = `rgba(100, 255, 218, ${p.life * p2.life * 0.4})`;
                             ctxT.moveTo(p.x, p.y);
                             ctxT.lineTo(p2.x, p2.y);
                             ctxT.stroke();

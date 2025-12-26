@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Oussama El Majdoubi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #000000;
+            --secondary: #380fbe;
+            --accent: #0becce;
+            --text-main: #e2d9f3;
+            --text-sec: #9caab9;
+            --transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #circuit-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-color: var(--primary);
+        }
+
+        #canvas-trail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background-color: rgba(10, 25, 47, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            border: 2px solid var(--accent);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .btn-cv {
+            padding: 8px 16px;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            color: var(--accent) !important;
+            transition: var(--transition);
+        }
+
+        .btn-cv:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+
+        /* --- Sidebar Email (Vertical à droite) --- */
+        .email-sidebar {
+            position: fixed;
+            bottom: 0;
+            right: 40px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .email-sidebar::after {
+            content: "";
+            display: block;
+            width: 1px;
+            height: 90px;
+            background-color: var(--text-sec);
+            margin: 0 auto;
+        }
+
+        .email-link {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            color: var(--text-sec);
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .email-link:hover {
+            color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        /* --- Hero --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 150px;
+            position: relative;
+        }
+
+        .hero-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            color: var(--text-sec);
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            max-width: 600px;
+            color: var(--text-sec);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            object-fit: cover;
+            box-shadow: 0 0 30px rgba(100, 255, 218, 0.2);
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 20px rgba(100, 255, 218, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(100, 255, 218, 0);
+            }
+        }
+
+        .btn-main {
+            padding: 15px 30px;
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .btn-main:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sec);
+        }
+
+        .mouse {
+            width: 30px;
+            height: 50px;
+            border: 2px solid var(--text-sec);
+            border-radius: 20px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .wheel {
+            width: 4px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 2px;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scroll 2s infinite;
+        }
+
+        @keyframes scroll {
+            0% {
+                top: 10px;
+                opacity: 1;
+            }
+
+            100% {
+                top: 30px;
+                opacity: 0;
+            }
+        }
+
+        /* --- Sections --- */
+        section {
+            padding: 100px 150px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            color: var(--text-main);
+        }
+
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 300px;
+            height: 1px;
+            background-color: #233554;
+            margin-left: 20px;
+        }
+
+        .section-title span {
+            color: var(--accent);
+            margin-right: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* --- Cards & Grid --- */
+        .skills-grid,
+        .projects-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .skills-grid {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .projects-grid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .card-spotlight {
+            background-color: var(--secondary);
+            padding: 30px 25px;
+            border-radius: 5px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .card-spotlight:hover {
+            transform: translateY(-7px);
+        }
+
+        .card-spotlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(100, 255, 218, 0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .card-spotlight:hover::before {
+            opacity: 1;
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            color: var(--text-sec);
+            margin-bottom: 20px;
+            transition: 0.5s;
+        }
+
+        .card-spotlight:hover .skill-icon {
+            color: var(--accent);
+            transform: rotate(360deg);
+        }
+
+        /* --- Timeline --- */
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+            padding-left: 40px;
+            border-left: 2px solid #233554;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+        }
+
+        .timeline-item:hover::before {
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .job-title {
+            font-size: 1.4rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .company {
+            color: var(--accent);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            margin-left: 5px;
+        }
+
+        .date {
+            font-size: 0.85rem;
+            color: var(--text-sec);
+            margin: 5px 0 20px;
+            display: block;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+
+        .job-desc ul {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .job-desc li {
+            color: var(--text-sec);
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .job-desc li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .job-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tech-badge {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--accent);
+            background: rgba(100, 255, 218, 0.05);
+            padding: 5px 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover .tech-badge {
+            background: rgba(100, 255, 218, 0.1);
+        }
+
+        /* --- Projets --- */
+        .project-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .folder-icon {
+            font-size: 40px;
+            color: var(--accent);
+        }
+
+        .project-title {
+            color: var(--text-main);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .card-spotlight:hover .project-title {
+            color: var(--accent);
+        }
+
+        .project-desc {
+            color: var(--text-sec);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .project-tech {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--text-sec);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* --- Canvas --- */
+        #canvas-trail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* --- Hamburger Menu --- */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            -webkit-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+            background-color: var(--text-main);
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 80px 25px;
+            }
+
+            .hero {
+                padding: 0 25px;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-top {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .profile-img {
+                margin-top: 20px;
+                width: 150px;
+                height: 150px;
+            }
+
+            .email-sidebar {
+                display: none;
+            }
+
+            /* Mobile Nav */
+            .hamburger {
+                display: block;
+                z-index: 1001;
+                /* Above mobile nav */
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            .nav-links {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                /* Below navbar */
+                gap: 0;
+                flex-direction: column;
+                background-color: rgba(5, 5, 16, 0.98);
+                /* var(--primary) with opacity */
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                border-bottom: 1px solid rgba(189, 52, 254, 0.2);
+                padding: 30px 0;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                margin: 20px 0;
+            }
+        }
+
+        /* --- Language Switcher --- */
+        .lang-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .lang-btn {
+            background: none;
+            border: 1px solid transparent;
+            color: var(--text-sec);
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .lang-btn.active {
+            color: var(--accent);
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .lang-btn:hover {
+            color: var(--text-main);
+        }
+
+        .lang-separator {
+            margin: 0 5px;
+            color: var(--text-sec);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas-trail"></canvas>
+    <canvas id="circuit-canvas"></canvas>
+
+    <div class="email-sidebar">
+        <a href="mailto:oussamajdoubi@gmail.com" class="email-link">oussamajdoubi@gmail.com</a>
+    </div>
+
+    <nav>
+        <a href="#" class="logo">OEM.</a>
+        <ul class="nav-links">
+            <li><a href="#about"><span></span> <span data-i18n="nav.expert">Expertise</span></a></li>
+            <li><a href="#experience"><span></span> <span data-i18n="nav.exp">Expérience</span></a></li>
+            <li><a href="#education"><span></span> <span data-i18n="nav.edu">Formation</span></a></li>
+            <li><a href="#projects"><span></span> <span data-i18n="nav.proj">Projets</span></a></li>
+            <li><a href="#contact"><span></span> <span data-i18n="nav.contact">Contact</span></a></li>
+            <li><a href="CV ELMAJDOUBI Oussama.pdf" target="_blank" class="btn-cv" data-i18n="nav.cv">CV PDF</a></li>
+            <li class="lang-switch-wrapper">
+                <button class="lang-btn active" onclick="setLanguage('fr')">FR</button>
+                <span class="lang-separator">/</span>
+                <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+            </li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h3 data-aos="fade-down" data-i18n="hero.greeting">Bonjour, je m'appelle</h3>
+        <div class="hero-top">
+            <div style="flex: 1;">
+                <h1 data-aos="fade-up" data-aos-delay="100">Oussama EL MAJDOUBI</h1>
+                <h2 data-aos="fade-up" data-aos-delay="200" class="typewriter"><span data-i18n="hero.master">Je
+                        maîtrise</span> <span id="typing-text" style="color:var(--accent)"></span></h2>
+                <p data-aos="fade-up" data-aos-delay="300" data-i18n="hero.desc">
+                    Élève ingénieur en <strong>Génie Électrique</strong> spécialisé en contrôle des systèmes
+                    industriels.
+                    Je conçois des solutions pour les énergies renouvelables et la résilience des réseaux critiques.
+                </p>
+                <div data-aos="fade-up" data-aos-delay="400">
+                    <a href="#contact" class="btn-main" data-i18n="hero.btn">Me contacter</a>
+                </div>
+            </div>
+            <img src="ta photo.png" alt="Oussama El Majdoubi" class="profile-img" data-aos="zoom-in"
+                data-aos-delay="200">
+        </div>
+
+        <div class="scroll-down">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>SCROLL</span>
+        </div>
+    </section>
+
+    <section id="about" data-aos="fade-down">
+        <h2 class="section-title"><span></span> <span data-i18n="about.title">Expertise Technique</span></h2>
+        <div class="skills-grid">
+            <div class="card-spotlight" data-tilt>
+                <i class="fas fa-solar-panel skill-icon"></i>
+                <h4 data-i18n="about.card1.title">Énergies Renouvelables</h4>
+                <p style="font-size:0.9rem; color:var(--text-sec); margin-top:10px;" data-i18n="about.card1.desc">
+                    Dimensionnement PV & BESS (31 MWh), Convertisseurs PCS, HTA/BT, Efficacité énergétique.
+                </p>
+            </div>
+            <div class="card-spotlight" data-tilt>
+                <i class="fas fa-microchip skill-icon"></i>
+                <h4 data-i18n="about.card2.title">Automatisme & Contrôle</h4>
+                <p style="font-size:0.9rem; color:var(--text-sec); margin-top:10px;" data-i18n="about.card2.desc">
+                    TIA Portal (S7-1200/300), PLCnext, Schneider, Supervision (Node-RED, Grafana), GRAFCET.
+                </p>
+            </div>
+            <div class="card-spotlight" data-tilt>
+                <i class="fas fa-drafting-compass skill-icon"></i>
+                <h4 data-i18n="about.card3.title">Ingénierie & Design</h4>
+                <p style="font-size:0.9rem; color:var(--text-sec); margin-top:10px;" data-i18n="about.card3.desc">
+                    AutoCAD Electrical, EPLAN, MATLAB/Simulink, FluidSim, Chiffrage & Devis.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" data-aos="fade-up">
+        <h2 class="section-title"><span></span> <span data-i18n="exp.title">Expériences Professionnelles</span></h2>
+        <div style="max-width: 900px;">
+
+            <div class="timeline-item">
+                <h3 class="job-title"><span data-i18n="exp.job1.role">Stage Ingénieur (PFA)</span> <span class="company"
+                        data-i18n="exp.job1.comp">à Groupe OCP, Jorf Lasfar</span></h3>
+                <span class="date" data-i18n="exp.job1.date">Juin 2025 - Septembre 2025</span>
+                <div class="job-desc">
+                    <p style="color:var(--text-sec); margin-bottom:10px; font-style:italic;"
+                        data-i18n="exp.job1.summary">
+                        Projet : Sécurisation de l'alimentation électrique de l'unité U04 via une solution hybride.
+                    </p>
+                    <ul>
+                        <li data-i18n="exp.job1.task1"><strong>Conception d'un micro-réseau résilient :</strong>
+                            Dimensionnement d'une centrale PV
+                            de <strong>1,1 MWc</strong> couplée à un système de stockage BESS de <strong>31 MWh</strong>
+                            pour assurer la continuité de service de 8 agitateurs critiques.</li>
+                        <li data-i18n="exp.job1.task2"><strong>Ingénierie Électrique & Dimensionnement :</strong> Calcul
+                            des sections de câbles,
+                            choix des protections (sélectivité) et intégration des convertisseurs PCS (2,5 MVA) et
+                            Transformateurs.</li>
+                        <li data-i18n="exp.job1.task3"><strong>Analyse Technico-Économique :</strong> Estimation
+                            détaillée du CAPEX/OPEX, étude de
+                            rentabilité (TRI, VAN) et sélection des équipements Tier-1 (Sungrow, CATL).</li>
+                    </ul>
+                    <div class="job-tags">
+                        <span class="tech-badge">PVsyst</span>
+                        <span class="tech-badge">AutoCAD</span>
+                        <span class="tech-badge">BESS</span>
+                        <span class="tech-badge">Moyenne Tension</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h3 class="job-title"><span data-i18n="exp.job2.role">Stage Ingénieur</span> <span class="company"
+                        data-i18n="exp.job2.comp">à RADEM, Meknès</span></h3>
+                <span class="date" data-i18n="exp.job2.date">Juillet 2024 - Août 2024</span>
+                <div class="job-desc">
+                    <p style="color:var(--text-sec); margin-bottom:10px; font-style:italic;"
+                        data-i18n="exp.job2.summary">
+                        Projet : Audit et optimisation du réseau de distribution électrique.
+                    </p>
+                    <ul>
+                        <li data-i18n="exp.job2.task1"><strong>Audit des pertes techniques :</strong> Analyse
+                            approfondie des chutes de tension et
+                            des taux de charge des transformateurs HTA/BT sur le réseau de distribution.</li>
+                        <li data-i18n="exp.job2.task2"><strong>Optimisation de la qualité de service :</strong>
+                            Diagnostic des incidents et
+                            proposition d'actions pour améliorer les indicateurs de continuité (SAIDI/SAIFI).</li>
+                        <li data-i18n="exp.job2.task3"><strong>Cartographie & Maintenance :</strong> Mise à jour des
+                            schémas unifilaires et
+                            participation aux plans de maintenance préventive des postes sources.</li>
+                    </ul>
+                    <div class="job-tags">
+                        <span class="tech-badge">Réseaux HTA/BT</span>
+                        <span class="tech-badge">Qualité Énergie</span>
+                        <span class="tech-badge">Maintenance</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h3 class="job-title"><span data-i18n="exp.job3.role">Stage Technicien Spécialisé</span> <span
+                        class="company" data-i18n="exp.job3.comp">à Groupe OCP, Khouribga</span>
+                </h3>
+                <span class="date" data-i18n="exp.job3.date">Avril 2022 - Juin 2022</span>
+                <div class="job-desc">
+                    <p style="color:var(--text-sec); margin-bottom:10px; font-style:italic;"
+                        data-i18n="exp.job3.summary">
+                        Projet : Automatisation d'une station de filtration des eaux industrielles.
+                    </p>
+                    <ul>
+                        <li data-i18n="exp.job3.task1"><strong>Revamping Automatisme :</strong> Modernisation du système
+                            de contrôle des vérins
+                            hydrauliques (Filtre à presse) : migration vers Siemens <strong>S7-1200</strong>.</li>
+                        <li data-i18n="exp.job3.task2"><strong>Programmation TIA Portal :</strong> Développement
+                            structuré (FC/FB), programmation
+                            LADDER/SCL et mise en œuvre des Grafcets de sûreté et de production.</li>
+                        <li data-i18n="exp.job3.task3"><strong>Supervision HMI :</strong> Conception d'interfaces
+                            ergonomiques pour le pilotage
+                            temps réel et la gestion des alarmes.</li>
+                    </ul>
+                    <div class="job-tags">
+                        <span class="tech-badge">TIA Portal</span>
+                        <span class="tech-badge">Siemens S7-1200</span>
+                        <span class="tech-badge">GRAFCET</span>
+                        <span class="tech-badge">HMI</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h3 class="job-title"><span data-i18n="exp.job4.role">Stage Technicien</span> <span class="company"
+                        data-i18n="exp.job4.comp">à Bobinage Al Atlas, Meknès</span></h3>
+                <span class="date" data-i18n="exp.job4.date">Avril 2021 - Mai 2021</span>
+                <div class="job-desc">
+                    <ul>
+                        <li data-i18n="exp.job4.task1"><strong>Maintenance Électromécanique :</strong> Diagnostic de
+                            pannes sur moteurs asynchrones
+                            triphasés et pompes industrielles.</li>
+                        <li data-i18n="exp.job4.task2"><strong>Intervention Technique :</strong> Opérations de
+                            rebobinage, remplacement de
+                            roulements et essais à vide/en charge.</li>
+                    </ul>
+                    <div class="job-tags">
+                        <span class="tech-badge">Machines Électriques</span>
+                        <span class="tech-badge">Maintenance</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="education" data-aos="fade-up">
+        <h2 class="section-title"><span></span> <span data-i18n="edu.title">Formation</span></h2>
+        <div style="max-width: 800px;">
+            <div class="timeline-item" style="border-left-color: var(--accent);">
+                <h3 class="job-title" data-i18n="edu.degree1">Ingénieur d'État en Génie Électrique</h3>
+                <span class="company">ENSET Mohammadia</span>
+                <span class="date">2023 - 2026 (En cours)</span>
+                <p style="color: var(--text-sec); font-size: 0.95rem;">Spécialité : <span data-i18n="edu.spec1">Contrôle
+                        des Systèmes Industriels
+                        (CSI).</span></p>
+            </div>
+            <div class="timeline-item" style="border-left-color: var(--accent);">
+                <h3 class="job-title"><span data-i18n="edu.degree2">Licence Pro : Électrotechnique & Électronique</span>
+                </h3>
+                <span class="company">Faculté des Sciences Semlalia, Marrakech</span>
+                <span class="date">2022 - 2023</span>
+            </div>
+            <div class="timeline-item" style="border-left-color: var(--accent);">
+                <h3 class="job-title" data-i18n="edu.degree3">Technicien Spécialisé (ESA)</h3>
+                <span class="company">Institut des Mines, Touissit</span>
+                <span class="date">2020 - 2022</span>
+                <p style="color: var(--text-sec); font-size: 0.95rem;" data-i18n="edu.spec3">Électromécanique des
+                    Systèmes Automatisés.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" data-aos="fade-up">
+        <h2 class="section-title"><span></span> <span data-i18n="proj.title"></span>Projets Académiques</span></h2>
+        <div class="projects-grid">
+
+            <div class="card-spotlight" data-tilt data-tilt-scale="1.02">
+                <div class="project-top">
+                    <i class="far fa-folder folder-icon"></i>
+                    <i class="fas fa-network-wired" style="color: var(--text-sec);"></i>
+                </div>
+                <h3 class="project-title" data-i18n="proj.p1.title">Architecture IIoT & RFID</h3>
+                <div class="project-desc" data-i18n="proj.p1.desc">
+                    Intégration Industrie 4.0 (S7-1200 + IO-Link). Supervision temps réel via Node-RED, stockage SQLite
+                    et communication Modbus TCP/IP.
+                </div>
+                <div class="project-tech">
+                    <span>Node-RED</span> <span>Modbus TCP</span> <span>IO-Link</span>
+                </div>
+            </div>
+
+            <div class="card-spotlight" data-tilt data-tilt-scale="1.02">
+                <div class="project-top">
+                    <i class="far fa-folder folder-icon"></i>
+                    <i class="fas fa-wind" style="color: var(--text-sec);"></i>
+                </div>
+                <h3 class="project-title" data-i18n="proj.p2.title">Commande Éolienne Isolée</h3>
+                <div class="project-desc" data-i18n="proj.p2.desc">
+                    Contrôle non-linéaire (Mode Glissant + Lyapunov) d'une PMSG 5kW. MPPT adaptatif (>95%) et stabilité
+                    bus DC.
+                </div>
+                <div class="project-tech">
+                    <span>MATLAB/Simulink</span> <span>Électronique de Puissance</span>
+                </div>
+            </div>
+
+            <div class="card-spotlight" data-tilt data-tilt-scale="1.02">
+                <div class="project-top">
+                    <i class="far fa-folder folder-icon"></i>
+                    <i class="fas fa-industry" style="color: var(--text-sec);"></i>
+                </div>
+                <h3 class="project-title" data-i18n="proj.p3.title">Convoyeur Intelligent</h3>
+                <div class="project-desc" data-i18n="proj.p3.desc">
+                    Pilotage de 4 profils de vitesse dynamiques. Intégration PLCnext, variateur Altivar et supervision
+                    IoT.
+                </div>
+                <div class="project-tech">
+                    <span>PLCnext</span> <span>Node-RED</span> <span>Grafana</span>
+                </div>
+            </div>
+
+            <div class="card-spotlight" data-tilt data-tilt-scale="1.02">
+                <div class="project-top">
+                    <i class="far fa-folder folder-icon"></i>
+                    <i class="fas fa-tools" style="color: var(--text-sec);"></i>
+                </div>
+                <h3 class="project-title" data-i18n="proj.p4.title">Station d'Usinage</h3>
+                <div class="project-desc" data-i18n="proj.p4.desc">
+                    Automatisation complète (Rainurage & Perçage). Modélisation GRAFCET (PO/PC) et simulation
+                    pneumatique.
+                </div>
+                <div class="project-tech">
+                    <span>GRAFCET</span> <span>FluidSim</span> <span>Pneumatique</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contact" style="text-align: center; margin-bottom: 50px;" data-aos="fade-up">
+        <p style="color: var(--accent);"></p>
+        <h2 style="font-size: 3rem; color: var(--text-main);" data-i18n="contact.title">Me Contacter</h2>
+        <p style="color: var(--text-sec); margin: 20px auto; max-width: 600px;" data-i18n="contact.desc">
+            À la recherche d'un <strong>Stage PFE (dès Fév 2026)</strong>.
+            <br>
+            <span style="display:block; margin-top:20px; color:var(--accent); font-size: 1.2rem;">
+                <i class="fas fa-phone-alt" style="margin-right: 10px;"></i> +212 6 58 64 22 21
+            </span>
+            <span
+                style="display:block; margin-top:10px; color:var(--text-main); font-size: 1.2rem; font-family: 'Courier New', monospace;">
+                <i class="fas fa-envelope" style="margin-right: 10px; color: var(--accent);"></i>
+                oussamajdoubi@gmail.com
+            </span>
+        </p>
+        <a href="mailto:oussamajdoubi@gmail.com" class="btn-main" data-i18n="contact.btn">Envoyer un email</a>
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // --- Machine à écrire ---
+        const textElement = document.getElementById('typing-text');
+        const texts = ["l'Automatisme", "les Énergies Renouvelables", "la Résilience Électrique", "l'Industrie 4.0", "CFO/CFA"];
+        let count = 0, index = 0, currentText = "", letter = "", isDeleting = false;
+
+        (function type() {
+            currentText = texts[count];
+            if (isDeleting) letter = currentText.slice(0, --index);
+            else letter = currentText.slice(0, ++index);
+
+            textElement.textContent = letter;
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && letter.length === currentText.length) {
+                typeSpeed = 2000; isDeleting = true;
+            } else if (isDeleting && letter.length === 0) {
+                isDeleting = false; count = (count + 1) % texts.length; typeSpeed = 500;
+            }
+            setTimeout(type, typeSpeed);
+        })();
+
+        // --- Circuit Background Animation ---
+        const canvas = document.getElementById('circuit-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let nodes = [];
+        let signals = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            createGrid();
+        }
+        window.addEventListener('resize', resize);
+
+        class Node {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.connections = [];
+            }
+        }
+
+        class Signal {
+            constructor(startNode, endNode) {
+                this.start = startNode;
+                this.end = endNode;
+                this.progress = 0;
+                this.speed = 0.02 + Math.random() * 0.04;
+                this.life = 1;
+            }
+            update() {
+                this.progress += this.speed;
+                if (this.progress >= 1) {
+                    this.life = 0;
+                    if (Math.random() > 0.3 && this.end.connections.length > 0) {
+                        let nextNode = this.end.connections[Math.floor(Math.random() * this.end.connections.length)];
+                        if (nextNode !== this.start) {
+                            signals.push(new Signal(this.end, nextNode));
+                        }
+                    }
+                }
+            }
+            draw() {
+                const x = this.start.x + (this.end.x - this.start.x) * this.progress;
+                const y = this.start.y + (this.end.y - this.start.y) * this.progress;
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = ctx.fillStyle;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function createGrid() {
+            nodes = [];
+            signals = [];
+            const cols = Math.floor(width / 100);
+            const rows = Math.floor(height / 100);
+            const grid = [];
+
+            for (let i = 0; i <= cols; i++) {
+                grid[i] = [];
+                for (let j = 0; j <= rows; j++) {
+                    const x = i * 100 + (Math.random() * 40 - 20);
+                    const y = j * 100 + (Math.random() * 40 - 20);
+                    const node = new Node(x, y);
+                    grid[i][j] = node;
+                    nodes.push(node);
+                }
+            }
+
+            // Create connections
+            for (let i = 0; i <= cols; i++) {
+                for (let j = 0; j <= rows; j++) {
+                    const node = grid[i][j];
+                    if (i < cols && Math.random() > 0.5) {
+                        const right = grid[i + 1][j];
+                        node.connections.push(right);
+                        right.connections.push(node);
+                    }
+                    if (j < rows && Math.random() > 0.5) {
+                        const down = grid[i][j + 1];
+                        node.connections.push(down);
+                        down.connections.push(node);
+                    }
+                }
+            }
+
+            // Initial signals
+            for (let i = 0; i < 5; i++) {
+                startRandomSignal();
+            }
+        }
+
+        function startRandomSignal() {
+            if (nodes.length === 0) return;
+            const start = nodes[Math.floor(Math.random() * nodes.length)];
+            if (start.connections.length > 0) {
+                const end = start.connections[Math.floor(Math.random() * start.connections.length)];
+                signals.push(new Signal(start, end));
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary');
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw grid lines
+            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = 'rgba(189, 52, 254, 0.1)'; // Low opacity accent
+            nodes.forEach(node => {
+                node.connections.forEach(conn => {
+                    ctx.beginPath();
+                    ctx.moveTo(node.x, node.y);
+                    ctx.lineTo(conn.x, conn.y);
+                    ctx.stroke();
+                });
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(189, 52, 254, 0.2)';
+                ctx.fill();
+            });
+
+            // Update and draw signals
+            if (Math.random() > 0.95 && signals.length < 15) startRandomSignal();
+
+            for (let i = signals.length - 1; i >= 0; i--) {
+                signals[i].update();
+                signals[i].draw();
+                if (signals[i].life <= 0) signals.splice(i, 1);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        resize();
+        animate();
+
+        // --- Canvas Trail Animation (Restored & Themed) ---
+        (function () {
+            const canvasT = document.getElementById('canvas-trail');
+            const ctxT = canvasT.getContext('2d');
+            let particles = [];
+
+            function resizeT() {
+                canvasT.width = window.innerWidth;
+                canvasT.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeT);
+            resizeT();
+
+            class Particle {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.vx = (Math.random() - 0.5) * 1.5;
+                    this.vy = (Math.random() - 0.5) * 1.5;
+                    this.life = 1;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.life -= 0.02;
+                }
+                draw() {
+                    ctxT.beginPath();
+                    ctxT.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+                    // Using new purple accent: 189, 52, 254
+                    ctxT.fillStyle = `rgba(189, 52, 254, ${this.life})`;
+                    ctxT.fill();
+                }
+            }
+
+            let lastMouse = { x: 0, y: 0 };
+            window.addEventListener('mousemove', e => {
+                if (Math.hypot(e.clientX - lastMouse.x, e.clientY - lastMouse.y) > 30) {
+                    particles.push(new Particle(e.clientX, e.clientY));
+                    lastMouse = { x: e.clientX, y: e.clientY };
+                }
+            });
+
+            function animateT() {
+                ctxT.clearRect(0, 0, canvasT.width, canvasT.height);
+                particles.forEach((p, i) => {
+                    p.update();
+                    p.draw();
+                    particles.slice(i).forEach(p2 => {
+                        let d = Math.hypot(p.x - p2.x, p.y - p2.y);
+                        if (d < 100) {
+                            ctxT.beginPath();
+                            ctxT.strokeStyle = `rgba(189, 52, 254, ${p.life * p2.life * 0.4})`;
+                            ctxT.moveTo(p.x, p.y);
+                            ctxT.lineTo(p2.x, p2.y);
+                            ctxT.stroke();
+                        }
+                    });
+                    if (p.life <= 0) particles.splice(i, 1);
+                });
+                requestAnimationFrame(animateT);
+            }
+            animateT();
+        })();
+
+        // --- Spotlight Mouse Tracker --- (Preserved)
+        document.querySelectorAll('.card-spotlight').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        // --- Internationalization ---
+        const translations = {
+            fr: {
+                nav: { expert: "Expertise", exp: "Expérience", edu: "Formation", proj: "Projets", contact: "Contact", cv: "CV PDF" },
+                hero: {
+                    greeting: "Bonjour, je m'appelle",
+                    master: "Je maîtrise",
+                    desc: "Futur ingénieur en <strong>Génie Électrique et Contrôle des Systèmes Industriels</strong>, Mon approche intègre le dimensionnement d'infrastructures de puissance robustes (CFO), des réseaux de distribution aux énergies renouvelables, tout en déployant l'intelligence nécessaire à leur pilotage via des architectures d'automatisme et de supervision avancées (CFA). Je conçois ainsi des solutions globales, visant à garantir la résilience et l'efficacité opérationnelle des installations industrielles de demain.",
+                    btn: "Me contacter",
+                    scroll: "SCROLL"
+                },
+                about: {
+                    title: "Expertise Technique",
+                    card1: { title: "Énergies Renouvelables", desc: "Dimensionnement PV & BESS (31 MWh), Convertisseurs PCS, HTA/BT, Efficacité énergétique." },
+                    card2: { title: "Automatisme & Contrôle", desc: "TIA Portal (S7-1200/300), PLCnext, Schneider, Supervision (Node-RED, Grafana), GRAFCET." },
+                    card3: { title: "Ingénierie & Design", desc: "AutoCAD Electrical, EPLAN, MATLAB/Simulink, FluidSim, Chiffrage & Devis." }
+                },
+                exp: {
+                    job1: {
+                        role: "Stage Ingénieur (PFA)",
+                        comp: "à Groupe OCP, Jorf Lasfar",
+                        date: "Juin 2025 - Septembre 2025",
+                        summary: "Projet : Sécurisation de l'alimentation électrique de l'unité U04 via une solution hybride.",
+                        task1: "<strong>Conception d'un micro-réseau résilient :</strong> Dimensionnement d'une centrale PV de <strong>1,1 MWc</strong> couplée à un système de stockage BESS de <strong>31 MWh</strong> pour assurer la continuité de service de 8 agitateurs critiques.",
+                        task2: "<strong>Ingénierie Électrique & Dimensionnement :</strong> Calcul des sections de câbles, choix des protections (sélectivité) et intégration des convertisseurs PCS (2,5 MVA) et Transformateurs.",
+                        task3: "<strong>Analyse Technico-Économique :</strong> Estimation détaillée du CAPEX/OPEX, étude de rentabilité (TRI, VAN) et sélection des équipements Tier-1 (Sungrow, CATL)."
+                    },
+                    job2: {
+                        role: "Stage Ingénieur",
+                        comp: "à RADEM, Meknès",
+                        date: "Juillet 2024 - Août 2024",
+                        summary: "Projet : Audit et optimisation du réseau de distribution électrique.",
+                        task1: "<strong>Audit des pertes techniques :</strong> Analyse approfondie des chutes de tension et des taux de charge des transformateurs HTA/BT sur le réseau de distribution.",
+                        task2: "<strong>Optimisation de la qualité de service :</strong> Diagnostic des incidents et proposition d'actions pour améliorer les indicateurs de continuité (SAIDI/SAIFI).",
+                        task3: "<strong>Cartographie & Maintenance :</strong> Mise à jour des schémas unifilaires et participation aux plans de maintenance préventive des postes sources."
+                    },
+                    job3: {
+                        role: "Stage Technicien Spécialisé",
+                        comp: "à Groupe OCP, Khouribga",
+                        date: "Avril 2022 - Juin 2022",
+                        summary: "Projet : Automatisation d'une station de filtration des eaux industrielles.",
+                        task1: "<strong>Revamping Automatisme :</strong> Modernisation du système de contrôle des vérins hydrauliques (Filtre à presse) : migration vers Siemens <strong>S7-1200</strong>.",
+                        task2: "<strong>Programmation TIA Portal :</strong> Développement structuré (FC/FB), programmation LADDER/SCL et mise en œuvre des Grafcets de sûreté et de production.",
+                        task3: "<strong>Supervision HMI :</strong> Conception d'interfaces ergonomiques pour le pilotage temps réel et la gestion des alarmes."
+                    },
+                    job4: {
+                        role: "Stage Technicien",
+                        comp: "à Bobinage Al Atlas, Meknès",
+                        date: "Avril 2021 - Mai 2021",
+                        task1: "<strong>Maintenance Électromécanique :</strong> Diagnostic de pannes sur moteurs asynchrones triphasés et pompes industrielles.",
+                        task2: "<strong>Intervention Technique :</strong> Opérations de rebobinage, remplacement de roulements et essais à vide/en charge."
+                    }
+                },
+                edu: {
+                    title: "Formation",
+                    degree1: "Ingénieur d'État en Génie Électrique",
+                    spec1: "Contrôle des Systèmes Industriels (CSI).",
+                    degree2: "Licence Pro : Électrotechnique & Électronique",
+                    degree3: "Technicien Spécialisé (ESA)",
+                    spec3: "Électromécanique des Systèmes Automatisés."
+                },
+                proj: {
+                    title: "Projets Académiques",
+                    p1: { title: "Architecture IIoT & RFID", desc: "Intégration Industrie 4.0 (S7-1200 + IO-Link). Supervision temps réel via Node-RED, stockage SQLite et communication Modbus TCP/IP." },
+                    p2: { title: "Commande Éolienne Isolée", desc: "Contrôle non-linéaire (Mode Glissant + Lyapunov) d'une PMSG 5kW. MPPT adaptatif (>95%) et stabilité bus DC." },
+                    p3: { title: "Convoyeur Intelligent", desc: "Pilotage de 4 profils de vitesse dynamiques. Intégration PLCnext, variateur Altivar et supervision IoT." },
+                    p4: { title: "Station d'Usinage", desc: "Automatisation complète (Rainurage & Perçage). Modélisation GRAFCET (PO/PC) et simulation pneumatique." }
+                },
+                contact: {
+                    title: "Me Contacter",
+                    desc: "À la recherche d'un <strong>Stage PFE (dès Fév 2026)</strong>.<br><span style='display:block; margin-top:20px; color:var(--accent); font-size: 1.2rem;'><i class='fas fa-phone-alt' style='margin-right: 10px;'></i> +212 6 58 64 22 21</span><span style='display:block; margin-top:10px; color:var(--text-main); font-size: 1.2rem; font-family: \"Courier New\", monospace;'><i class='fas fa-envelope' style='margin-right: 10px; color: var(--accent);'></i> oussamajdoubi@gmail.com</span>",
+                    btn: "Envoyer un email"
+                }
+            },
+            en: {
+                nav: { expert: "Expertise", exp: "Experience", edu: "Education", proj: "Projects", contact: "Contact", cv: "CV PDF" },
+                hero: {
+                    greeting: "Hello, I am",
+                    master: "I master",
+                    desc: "Future Engineer in <strong>Electrical Engineering and Industrial Systems Control</strong>. My approach integrates the sizing of robust power infrastructures (CFO), from distribution networks to renewable energies, while deploying the intelligence necessary for their control via advanced automation and supervision architectures (CFA). I thus design global solutions, aiming to guarantee the resilience and operational efficiency of tomorrow's industrial installations.",
+                    btn: "Contact Me",
+                    scroll: "SCROLL"
+                },
+                about: {
+                    title: "Technical Expertise",
+                    card1: { title: "Renewable Energies", desc: "PV & BESS sizing (31 MWh), PCS Converters, MV/LV, Energy Efficiency." },
+                    card2: { title: "Automation & Control", desc: "TIA Portal (S7-1200/300), PLCnext, Schneider, Supervision (Node-RED, Grafana), GRAFCET." },
+                    card3: { title: "Engineering & Design", desc: "AutoCAD Electrical, EPLAN, MATLAB/Simulink, FluidSim, Costing & Quotes." }
+                },
+                exp: {
+                    title: "Professional Experience",
+                    job1: {
+                        role: "Engineering Intern (PFA)",
+                        comp: "at OCP Group, Jorf Lasfar",
+                        date: "June 2025 - September 2025",
+                        summary: "Project: Securing the power supply of unit U04 via a hybrid solution.",
+                        task1: "<strong>Resilient Microgrid Design:</strong> Sizing of a <strong>1.1 MWp</strong> PV plant coupled with a <strong>31 MWh</strong> BESS to ensure service continuity for 8 critical agitators.",
+                        task2: "<strong>Electrical Engineering & Sizing:</strong> Cable section calculation, protection selection (selectivity) and integration of PCS converters (2.5 MVA) and Transformers.",
+                        task3: "<strong>Techno-Economic Analysis:</strong> Detailed CAPEX/OPEX estimation, profitability study (IRR, NPV) and selection of Tier-1 equipment (Sungrow, CATL)."
+                    },
+                    job2: {
+                        role: "Engineering Intern",
+                        comp: "at RADEM, Meknès",
+                        date: "July 2024 - August 2024",
+                        summary: "Project: Audit and optimization of the electrical distribution network.",
+                        task1: "<strong>Technical Losses Audit:</strong> In-depth analysis of voltage drops and load rates of MV/LV transformers on the distribution network.",
+                        task2: "<strong>Service Quality Optimization:</strong> Incident diagnosis and proposal of actions to improve continuity indicators (SAIDI/SAIFI).",
+                        task3: "<strong>Mapping & Maintenance:</strong> Update of single-line diagrams and participation in preventive maintenance plans for substations."
+                    },
+                    job3: {
+                        role: "Specialized Technician Intern",
+                        comp: "at OCP Group, Khouribga",
+                        date: "April 2022 - June 2022",
+                        summary: "Project: Automation of an industrial water filtration station.",
+                        task1: "<strong>Automation Revamping:</strong> Modernization of the hydraulic cylinder control system (Filter press): migration to Siemens <strong>S7-1200</strong>.",
+                        task2: "<strong>TIA Portal Programming:</strong> Structured development (FC/FB), LADDER/SCL programming and implementation of safety and production Grafcets.",
+                        task3: "<strong>HMI Supervision:</strong> Design of ergonomic interfaces for real-time control and alarm management."
+                    },
+                    job4: {
+                        role: "Technician Intern",
+                        comp: "at Bobinage Al Atlas, Meknès",
+                        date: "April 2021 - May 2021",
+                        task1: "<strong>Electromechanical Maintenance:</strong> Diagnosis of failures on three-phase asynchronous motors and industrial pumps.",
+                        task2: "<strong>Technical Intervention:</strong> Rewinding operations, bearing replacement, and no-load/load testing."
+                    }
+                },
+                edu: {
+                    title: "Education",
+                    degree1: "State Engineer in Electrical Engineering",
+                    spec1: "Industrial Systems Control (CSI).",
+                    degree2: "Pro License: Electrotechnics & Electronics",
+                    degree3: "Specialized Technician (ESA)",
+                    spec3: "Electromechanics of Automated Systems."
+                },
+                proj: {
+                    title: "Academic Projects",
+                    p1: { title: "IIoT & RFID Architecture", desc: "Industry 4.0 Integration (S7-1200 + IO-Link). Real-time supervision via Node-RED, SQLite storage and Modbus TCP/IP communication." },
+                    p2: { title: "Isolated Wind Turbine Control", desc: "Non-linear control (Sliding Mode + Lyapunov) of a 5kW PMSG. Adaptive MPPT (>95%) and DC bus stability." },
+                    p3: { title: "Smart Conveyor", desc: "Control of 4 dynamic speed profiles. PLCnext integration, Altivar drive and IoT supervision." },
+                    p4: { title: "Machining Station", desc: "Complete automation (Grooving & Drilling). GRAFCET modeling (PO/PC) and pneumatic simulation." }
+                },
+                contact: {
+                    title: "Contact Me",
+                    desc: "Looking for a <strong>PFE Internship (starting Feb 2026)</strong>.<br><span style='display:block; margin-top:20px; color:var(--accent); font-size: 1.2rem;'><i class='fas fa-phone-alt' style='margin-right: 10px;'></i> +212 6 58 64 22 21</span><span style='display:block; margin-top:10px; color:var(--text-main); font-size: 1.2rem; font-family: \"Courier New\", monospace;'><i class='fas fa-envelope' style='margin-right: 10px; color: var(--accent);'></i> oussamajdoubi@gmail.com</span>",
+                    btn: "Send an email"
+                }
+            }
+        };
+
+        function setLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const keys = key.split('.');
+                let translation = translations[lang];
+                keys.forEach(k => { if (translation) translation = translation[k]; });
+
+                if (translation) {
+                    if (translation.includes('<')) element.innerHTML = translation;
+                    else element.textContent = translation;
+                }
+            });
+
+            // Buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(lang.toLowerCase())) btn.classList.add('active');
+            });
+
+            // Typewriter update
+            const newTexts = lang === 'fr'
+                ? ["l'Automatisme", "les Énergies Renouvelables", "la Résilience Électrique", "l'Industrie 4.0", "CFO/CFA"]
+                : ["Automation", "Renewable Energies", "Electrical Resilience", "Industry 4.0", "CFO/CFA"];
+
+            // Assuming 'texts' is global array from the previous script
+            if (typeof texts !== 'undefined' && Array.isArray(texts)) {
+                texts.length = 0;
+                newTexts.forEach(t => texts.push(t));
+            }
+        }
+
+        // --- Mobile Menu Toggle ---
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-links");
+
+        if (hamburger && navMenu) {
+            hamburger.addEventListener("click", () => {
+                hamburger.classList.toggle("active");
+                navMenu.classList.toggle("active");
+            });
+
+            document.querySelectorAll(".nav-links a").forEach(n => n.addEventListener("click", () => {
+                hamburger.classList.remove("active");
+                navMenu.classList.remove("active");
+            }));
+        }
+    </script>
+</body>
+
+</html>
